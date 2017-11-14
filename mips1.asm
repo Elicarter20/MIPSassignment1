@@ -108,7 +108,10 @@ exit:
               	syscall
 great0:
 		blt $s0, 58, less9 #between 0 and 9
-		bgt $s0, 64, greatA
+		bge $s0, 58, great9
+great9:
+		ble $s0, 64, exitNV
+		bgt $s0, 64, greatA 
 less9:
 		li $t1, 0 #to store the conversion
 		addi $t1, $s0, -48
@@ -123,6 +126,9 @@ less9:
 		 				
 greatA:				               	
 		blt $s0, 71, lessF
+		bge $s0, 72, greatF
+greatF:
+		ble $s0, 96, exitNV
 		bgt $s0, 96, greata
 		
 lessF:
@@ -137,8 +143,8 @@ lessF:
 		addi $s1, $s1, -1  # decrements length by 1
 		j loop2
 greata:
-		blt $s0, 103, lessf 
-lessf:
+		#blt $s0, 103, lessf 
+
 		li $t1, 0 #to store the conversion
 		addi $t1, $s0, -87
 		add $s3, $0, $s1 # store length so we can use it
@@ -149,10 +155,4 @@ lessf:
 		addi $s1, $s1, -1  # decrements length by 1
 		j loop2
 		
-	#Loop:
-		#add $s1, $a0, $t0 
-		#lb $s2, 0($s1)
-		#beq $s2, $zero, exit
-		#beq $s2, 
-		#addi $t0, $t0, 1
-		#j Loop
+	
