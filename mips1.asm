@@ -9,8 +9,8 @@
 .data
 	message: .asciiz "Please enter a string-- "
 	userInput: .space 9
-	nl: "\n"
-	error: "Invalid hexadecimal number"
+	nl: .asciiz  "\n"
+	error: .asciiz "Invalid hexadecimal number"
 .text
 
 	main:
@@ -20,9 +20,9 @@
 		li $s2, 0
 		
 		# displays message
-		li $v0, 4
-		la $a0, message
-		syscall
+		#li $v0, 4
+		#la $a0, message
+		#syscall
 		
 		#reads in text entered by the user
 		li $v0, 8
@@ -31,9 +31,9 @@
 		syscall
 		
 		#displays userinput
-		li $v0, 4
-		la $a0, userInput
-		syscall
+		#li $v0, 4
+		#la $a0, userInput
+		#syscall
 		
 		#Iterates through the string
 		
@@ -42,16 +42,16 @@
 loop:		
 		#loads and prints character from string
 		lb $a0, 0($t0)
-		li $v0, 11
+		#li $v0, 11
 		#syscall
 		
 		#needed for the comparison at then end of the loop
 		add $s0, $0, $a0
 		
 		#print newline
-		li $v0, 4
-		la $a0, nl
-		syscall
+		#li $v0, 4
+		#la $a0, nl
+		#syscall
 		
 		#check if at endline and will read in next byte
 		addi $t0, $t0, 1
@@ -89,6 +89,7 @@ loop2:
 		
 
 callLoop2:
+		addi $s4, $s1, 0
 		la $t0, userInput
 		j loop2
               	
@@ -101,7 +102,8 @@ exitNV:
               	syscall
 exit: 
 		add $a0, $s2, $0
-		li $v0, 36
+		bge $s4, 8, printDiff
+		li $v0, 1
 		syscall
 				
 		li $v0,10 #loads the service that exits
@@ -154,5 +156,26 @@ greata:
 		add $s2, $s2, $s3
 		addi $s1, $s1, -1  # decrements length by 1
 		j loop2
+		
+printDiff: 	#for length greater than 8
+		addi $t2, $0, 10000
+		divu $s2, $t2 # divivde by 10000
+		mfhi $t3
+		mflo $t4
+		
+		
+		li  $v0, 1
+		addi $a0, $t4, 0 #print low
+		syscall 
+		
+		li  $v0, 1
+		addi $a0, $t3, 0 #print high
+		syscall
+		
+		li $v0,10 #loads the service that exits
+              	syscall
+		
+		
+		 
 		
 	
