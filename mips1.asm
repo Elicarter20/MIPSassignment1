@@ -65,14 +65,16 @@ loop:
 		
 		
 loop2:		
-		lb $a0, 0($t0)
+		lb $a0, 0($t0) #loads in char
 		li $v0, 11
 		
 		#needed for the comparison at then end of the loop
 		add $s0, $0, $a0
-		beq $s0, 0, exit
+		#at the end of the string or at newline exit
+		beq $s0, 0, exit  
 		beq $s0, 10, exit
-		addi $t0, $t0, 1
+		
+		addi $t0, $t0, 1 #increment $t0 to move to next char
 		
 		#checks if char is greater than f or less than 0
 		blt $s0, 48, exitNV
@@ -112,7 +114,7 @@ great0:
 		blt $s0, 58, less9 #between 0 and 9
 		bge $s0, 58, great9
 great9:
-		ble $s0, 64, exitNV
+		ble $s0, 64, exitNV #invalid char
 		bgt $s0, 64, greatA 
 less9:
 		li $t1, 0 #to store the conversion
@@ -120,18 +122,17 @@ less9:
 		add $s3, $0, $s1 # store length so we can use it
 		addi $s3, $s3, -1 #sub 1 from length for calaculation
 		sll $s3, $s3, 2 # multiply by four to get shif afount(pow(16,len))
-		
-		sllv $s3, $t1, $s3 
-		add $s2, $s2, $s3
+		sllv $s3, $t1, $s3 #executes 16^len
+		add $s2, $s2, $s3 #adds to total summ
 		addi $s1, $s1, -1  # decrements length by 1
 		j loop2
 		 				
 greatA:				               	
-		blt $s0, 71, lessF
-		bge $s0, 72, greatF
+		blt $s0, 71, lessF #between A and F
+		bge $s0, 72, greatF #greater than F 
 greatF:
-		ble $s0, 96, exitNV
-		bgt $s0, 96, greata
+		ble $s0, 96, exitNV # invalid char
+		bgt $s0, 96, greata # greater than a but less than f(check is in loop 2)
 		
 lessF:
 		li $t1, 0 #to store the conversion
@@ -140,20 +141,20 @@ lessF:
 		addi $s3, $s3, -1 #sub 1 from length for calaculation
 		sll $s3, $s3, 2 # multiply by four to get shif afount(pow(16,len))
 		
-		sllv $s3, $t1, $s3 
-		add $s2, $s2, $s3
+		sllv $s3, $t1, $s3 #executes 16^len
+		add $s2, $s2, $s3 #adds to total summ
 		addi $s1, $s1, -1  # decrements length by 1
 		j loop2
 greata:
-		#blt $s0, 103, lessf 
+		
 
 		li $t1, 0 #to store the conversion
 		addi $t1, $s0, -87
 		add $s3, $0, $s1 # store length so we can use it
 		addi $s3, $s3, -1 #sub 1 from length for calaculation
 		sll $s3, $s3, 2 # multiply by four to get shif afount(pow(16,len))
-		sllv $s3, $t1, $s3 
-		add $s2, $s2, $s3
+		sllv $s3, $t1, $s3 #executes 16^len
+		add $s2, $s2, $s3 #adds to total summ
 		addi $s1, $s1, -1  # decrements length by 1
 		j loop2
 		
